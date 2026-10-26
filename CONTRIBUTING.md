@@ -77,7 +77,8 @@ refactor(utils): 금액 나누기 로직을 splitWon으로 분리
 
 ## 새 번들 추가하기
 
-1. `bundles/order`를 참고해 `bundles/<name>`을 만듦
+1. `bundles/cash`를 참고해 `bundles/<name>`을 만듦
 2. `package.json`의 `name`을 `@toss-place/<name>`으로 정함
-3. `packages/eslint-config/index.mjs`의 번들 간 참조 금지 목록에 이름을 추가함
-4. 셸에서 번들을 여는 경로를 추가함
+3. `vite.config.ts`에서 `createBundleConfig({ port })`로 겹치지 않는 포트를 정함
+4. `apps/shell/src/bundles.ts`의 `BUNDLES`에 같은 포트로 등록함
+5. `packages/eslint-config/index.mjs`의 번들 간 참조 금지 목록에 이름을 추가함

@@ -76,8 +76,7 @@ Frontend UX Engineer (Design System) 공고
 
 - Sentry (Platform 공고). 번들별 에러 추적
 - 번들 버전 관리와 셸의 번들 다운로드, 롤백
-- 결제, 시재관리 번들 추가
-- 프로덕션 셸의 Content Security Policy
+- 결제 수단별 번들 분리 (현금, 간편결제)
 
 ## 출처
 

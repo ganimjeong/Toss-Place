@@ -15,6 +15,7 @@ packages/
   pos-bridge/       POS 기기 표준 인터페이스, 브라우저 개발용 mock, IPC 채널 이름
   design-system/    디자인 토큰 (Vanilla Extract)
   utils/            금액 계산 등 공통 유틸
+  vite-config/      번들 공통 Vite 설정, 프로덕션 CSP
   eslint-config/    공통 린트 규칙
   tsconfig/         공통 TypeScript 설정
 research/           구조와 규칙을 정할 때 참고한 자료 정리
@@ -39,11 +40,21 @@ yarn dev:order   # http://localhost:5173
 yarn dev:cash    # http://localhost:5174
 ```
 
-Electron 셸로 띄우기 (주문 번들 개발 서버를 먼저 켜둬야 함)
+Electron 셸로 띄우기 (번들 개발 서버를 먼저 켜둬야 함)
 
 ```sh
 yarn dev:order
+yarn dev:cash
 yarn dev:shell
+```
+
+셸 메뉴의 화면 항목이나 `Cmd/Ctrl + 1, 2`로 번들을 바꿈.
+
+빌드 결과로 띄우기
+
+```sh
+yarn build
+yarn workspace @toss-place/shell start
 ```
 
 ## 자주 쓰는 명령
