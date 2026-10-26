@@ -9,7 +9,8 @@
 apps/
   shell/            Electron 셸. 번들 로딩, 기기 연동(IPC) 담당
 bundles/
-  order/            주문 화면 (Vite + React)
+  order/            주문, 카드 결제, 영수증 출력
+  cash/             시재관리. 권종별 현금 세기와 과부족 확인, 금전함 열기
 packages/
   pos-bridge/       POS 기기 표준 인터페이스, 브라우저 개발용 mock, IPC 채널 이름
   design-system/    디자인 토큰 (Vanilla Extract)
@@ -31,10 +32,11 @@ corepack enable
 yarn install
 ```
 
-브라우저에서 주문 번들만 띄우기 (기기 기능은 mock으로 동작)
+브라우저에서 번들만 띄우기 (기기 기능은 mock으로 동작)
 
 ```sh
-yarn dev:order
+yarn dev:order   # http://localhost:5173
+yarn dev:cash    # http://localhost:5174
 ```
 
 Electron 셸로 띄우기 (주문 번들 개발 서버를 먼저 켜둬야 함)

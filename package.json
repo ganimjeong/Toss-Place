@@ -13,6 +13,7 @@
   "scripts": {
     "postinstall": "husky",
     "dev:order": "yarn workspace @toss-place/order dev",
+    "dev:cash": "yarn workspace @toss-place/cash dev",
     "dev:shell": "yarn workspace @toss-place/shell dev",
     "build": "yarn workspaces foreach -Apt --exclude toss-place run build",
     "typecheck": "yarn workspaces foreach -Ap --exclude toss-place run typecheck",
