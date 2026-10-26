@@ -117,6 +117,12 @@
 - 이점: 실제로 올라갈 tarball을 열어서 ESM, CJS 각각에서 타입과 파일 경로가 맞게 풀리는지 검사함
 - 선택 이유: 라이브러리는 빌드가 성공해도 소비자 환경에서 타입이 안 잡히는 일이 흔함. 결제 SDK를 npm에 올리기 전에 CI에서 막으려고 씀
 
+### Sentry
+
+- 이점: 에러, 크래시를 릴리스와 소스맵에 묶어 원래 코드 위치로 보여줌
+- 선택 이유: Platform 공고의 모니터링 스택. 번들은 `@sentry/react`, 셸은 Electron 내장 `crashReporter`로 나눔. `@sentry/electron`은 번들이 Electron을 알아야 해서 쓰지 않음
+- 번들은 `@toss-place/monitoring`만 씀. 수집 정책을 한곳에서 관리하고 도구를 바꿀 때 영향 범위를 줄이려는 것
+
 ### GitHub Actions
 
 - 이점: PR마다 포맷, 린트, 타입, 테스트, 빌드, PR 제목 형식을 검사함

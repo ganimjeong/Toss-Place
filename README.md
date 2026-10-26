@@ -13,6 +13,7 @@ bundles/
   cash/             시재관리. 권종별 현금 세기와 과부족 확인, 금전함 열기
 packages/
   payment-sdk/      결제 상태 전이, 중복 요청 방지, 결과를 모르는 결제의 조회와 복구 (npm 배포용)
+  monitoring/       Sentry 초기화와 수집 정책, React 루트 에러 훅
   pos-bridge/       POS 기기 표준 인터페이스, 브라우저 개발용 mock, IPC 채널 이름
   design-system/    디자인 토큰 (Vanilla Extract)
   utils/            금액 계산 등 공통 유틸
@@ -72,6 +73,17 @@ yarn workspace @toss-place/shell smoke           # 번들이 실제로 그려지
 `pos@x.y.z` 태그를 올리면 GitHub Actions가 macOS, Windows에서 패키징하고 스모크 테스트를 통과한 경우에만 릴리스를 만듦.
 서명하지 않은 빌드라 macOS는 처음 열 때 우클릭 후 열기, Windows는 SmartScreen에서 추가 정보 후 실행을 눌러야 함.
 
+## 모니터링
+
+빌드할 때 `SENTRY_DSN`이 있으면 켜지고, 없으면 꺼짐. 로컬 개발과 테스트에서는 아무것도 보내지 않음.
+
+- 번들: JS 에러, ErrorBoundary가 잡은 에러, 결과를 모르는 결제(`warning`)
+- 셸: 렌더러, GPU, 메인 프로세스 크래시를 Electron `crashReporter`가 minidump로 보냄
+- CSP `connect-src`에는 DSN의 출처만 추가됨
+- `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`가 있으면 소스맵을 올리고 결과물에서는 지움
+
+GitHub 저장소에 시크릿 `SENTRY_DSN`, `SENTRY_AUTH_TOKEN`과 변수 `SENTRY_ORG`, `SENTRY_PROJECT`를 등록하면 릴리스 빌드에 적용됨.
+
 ## 자주 쓰는 명령
 
 | 명령             | 설명                        |
@@ -84,7 +96,7 @@ yarn workspace @toss-place/shell smoke           # 번들이 실제로 그려지
 
 ## 기술 스택
 
-React 19, TypeScript, Vite, Electron, TanStack Query, Emotion, Vanilla Extract, overlay-kit, Suspensive, es-toolkit, Vitest, Testing Library, Yarn Berry, GitHub Actions
+React 19, TypeScript, Vite, Electron, TanStack Query, Emotion, Vanilla Extract, overlay-kit, Suspensive, es-toolkit, Vitest, Testing Library, Yarn Berry, electron-builder, Sentry, GitHub Actions
 
 선택 이유는 [research/02-tech-stack.md](research/02-tech-stack.md)에 정리함.
 
