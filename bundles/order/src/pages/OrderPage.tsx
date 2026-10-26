@@ -6,10 +6,12 @@ import { useState } from 'react';
 
 import { CartPanel } from '../order/components/CartPanel';
 import { MenuGrid, MenuGridSkeleton } from '../order/components/MenuGrid';
-import { PaymentResultDialog } from '../order/components/PaymentResultDialog';
+import { ResultDialog } from '../order/components/ResultDialog';
 import { useCardPayment } from '../order/hooks/useCardPayment';
 import { useCart } from '../order/hooks/useCart';
 import { toPaymentMessage } from '../order/paymentMessages';
+import { printReceiptWithRetry } from '../order/receipt/printReceiptWithRetry';
+import { toReceipt } from '../order/receipt/toReceipt';
 
 export function OrderPage() {
   const [orderId, setOrderId] = useState(createOrderId);
@@ -20,14 +22,18 @@ export function OrderPage() {
     const result = await payment.pay(cart.totalAmount);
     const message = toPaymentMessage(result);
 
-    if (result.ok) {
-      cart.clear();
-      setOrderId(createOrderId());
+    if (!result.ok) {
+      openResultDialog(message);
+      return;
     }
 
-    overlay.open(({ isOpen, close }) => (
-      <PaymentResultDialog isOpen={isOpen} onClose={close} {...message} />
-    ));
+    // 장바구니를 비우기 전에 영수증 내용을 먼저 만들어 둠
+    const receipt = toReceipt(orderId, cart.items, result.value.amount);
+    cart.clear();
+    setOrderId(createOrderId());
+
+    await printReceiptWithRetry(receipt);
+    openResultDialog(message);
   };
 
   return (
@@ -46,6 +52,12 @@ export function OrderPage() {
       />
     </main>
   );
+}
+
+function openResultDialog(message: { title: string; description: string }) {
+  overlay.open(({ isOpen, close }) => (
+    <ResultDialog isOpen={isOpen} {...message} confirm={{ label: '확인', onClick: close }} />
+  ));
 }
 
 function createOrderId() {
