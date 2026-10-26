@@ -1,0 +1,4 @@
+{
+  "extends": "@toss-place/tsconfig/react.json",
+  "include": ["src", "vite.config.ts"]
+}
