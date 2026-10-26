@@ -57,6 +57,19 @@ yarn build
 yarn workspace @toss-place/shell start
 ```
 
+셸 빌드는 각 번들의 빌드 결과를 `apps/shell/dist/bundles`로 복사함. 패키징 전후 번들 경로가 같음.
+
+설치 파일 만들기 (서명하지 않은 빌드)
+
+```sh
+yarn build
+yarn workspace @toss-place/shell package --mac   # 또는 --win
+yarn workspace @toss-place/shell smoke           # 번들이 실제로 그려지는지 확인
+```
+
+`pos@x.y.z` 태그를 올리면 GitHub Actions가 macOS, Windows에서 패키징하고 스모크 테스트를 통과한 경우에만 릴리스를 만듦.
+서명하지 않은 빌드라 macOS는 처음 열 때 우클릭 후 열기, Windows는 SmartScreen에서 추가 정보 후 실행을 눌러야 함.
+
 ## 자주 쓰는 명령
 
 | 명령             | 설명                        |

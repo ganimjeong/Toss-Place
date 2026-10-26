@@ -80,5 +80,5 @@ refactor(utils): 금액 나누기 로직을 splitWon으로 분리
 1. `bundles/cash`를 참고해 `bundles/<name>`을 만듦
 2. `package.json`의 `name`을 `@toss-place/<name>`으로 정함
 3. `vite.config.ts`에서 `createBundleConfig({ port })`로 겹치지 않는 포트를 정함
-4. `apps/shell/src/bundles.ts`의 `BUNDLES`에 같은 포트로 등록함
+4. `apps/shell/src/bundles.ts`의 `BUNDLES`에 같은 포트로 등록하고, 셸 `package.json`의 `devDependencies`에 `@toss-place/<name>`을 추가함. 빠뜨리면 빌드 순서가 보장되지 않고 셸 테스트가 실패함
 5. `packages/eslint-config/index.mjs`의 번들 간 참조 금지 목록에 이름을 추가함
