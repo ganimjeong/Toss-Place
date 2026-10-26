@@ -3,6 +3,8 @@ import { defineConfig, type UserConfig } from 'tsdown';
 const shared = {
   format: 'cjs',
   platform: 'node',
+  // 설치한 앱은 실행 환경 변수를 받지 않으므로 빌드 시점 값을 코드에 넣음
+  define: { 'process.env.SENTRY_DSN': JSON.stringify(process.env.SENTRY_DSN ?? '') },
   deps: {
     neverBundle: ['electron'],
     // Electron 런타임에서 워크스페이스 패키지를 찾을 수 없으므로 전부 번들에 포함함

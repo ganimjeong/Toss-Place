@@ -5,12 +5,16 @@ import type { CardPaymentRequest, PosBridge, Receipt } from '@toss-place/pos-bri
 import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 
 import { resolveBundleUrl, type BundleName } from './bundles';
+import { startCrashReporting } from './crashReporting';
 import { createDeviceStub } from './devices';
 import { createAppMenu } from './menu';
 import { runSmokeTest } from './smokeTest';
 
 const isDev = process.env.BUNDLE_DEV === '1';
 const isSmokeTest = process.argv.includes('--smoke-test');
+
+// SENTRY_DSN은 빌드할 때 tsdown이 값으로 바꿔 넣음
+startCrashReporting(process.env.SENTRY_DSN ?? '');
 
 function registerPosBridge(devices: PosBridge) {
   ipcMain.handle(POS_BRIDGE_CHANNELS.printReceipt, (_event, receipt: Receipt) =>
