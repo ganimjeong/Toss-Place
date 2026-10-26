@@ -1,0 +1,4 @@
+{
+  "extends": "@toss-place/tsconfig/base.json",
+  "include": ["src"]
+}
