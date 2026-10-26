@@ -6,7 +6,7 @@
   "main": "dist/main.cjs",
   "scripts": {
     "build": "tsdown",
-    "dev": "tsdown && ORDER_BUNDLE_URL=http://localhost:5173 electron .",
+    "dev": "tsdown && BUNDLE_DEV=1 electron .",
     "start": "electron .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
