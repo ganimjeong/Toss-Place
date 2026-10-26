@@ -1,0 +1,7 @@
+{
+  "extends": "@toss-place/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["src"]
+}
