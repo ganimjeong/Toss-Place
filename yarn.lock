@@ -5274,8 +5274,6 @@ __metadata:
   dependenciesMeta:
     "@swc/core":
       built: true
-    electron:
-      built: true
     esbuild:
       built: true
   languageName: unknown

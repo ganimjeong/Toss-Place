@@ -43,3 +43,10 @@
 - 증상: TypeScript 7, ESLint 10을 깔면 typescript-eslint, jsx-a11y의 peer dependency 범위를 벗어남
 - 해결: `npm view <패키지> peerDependencies`로 범위를 먼저 확인하고 TypeScript 6.0, ESLint 9로 맞춤
 - 배운 점: 최신 버전을 바로 쓰기보다 생태계 전체가 따라왔는지 먼저 확인해야 함
+
+## CI에서 yarn install --immutable 실패
+
+- 증상: 로컬에서는 잘 되는데 CI에서 "The lockfile would have been modified by this install" 에러가 남
+- 원인: `package.json`의 `dependenciesMeta`를 고친 뒤 `yarn install`을 다시 돌리지 않아서 `yarn.lock`이 예전 상태로 커밋됨
+- 해결: `yarn install`로 lockfile을 갱신해서 커밋함
+- 배운 점: `package.json`을 고치면 커밋 전에 `yarn install --immutable`로 lockfile이 맞는지 확인해야 함
