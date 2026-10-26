@@ -11,7 +11,7 @@ describe('BUNDLES', () => {
   });
 
   it('모든 번들이 셸 의존성으로 선언돼 있음', () => {
-    // 선언하지 않으면 yarn build의 토폴로지 순서에서 셸이 번들보다 먼저 빌드될 수 있음
+    // 루트 yarn build는 --topological-dev라 devDependencies까지 보고 순서를 정함. 선언을 빠뜨리면 셸이 번들보다 먼저 빌드될 수 있음
     const dependencies = Object.keys(packageJson.devDependencies);
 
     expect(dependencies).toEqual(

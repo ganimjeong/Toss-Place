@@ -44,6 +44,10 @@ jobs:
 
       - run: corepack enable
 
+      # pnpm 링커는 전역 저장소에서 node_modules로 하드링크를 검. Windows 러너는 홈(C:)과 작업 폴더(D:)가
+      # 다른 드라이브라 하드링크가 실패(EXDEV)하므로 전역 폴더를 작업 폴더와 같은 드라이브에 둠
+      - run: echo "YARN_GLOBAL_FOLDER=$RUNNER_TEMP/yarn-global" >> "$GITHUB_ENV"
+
       - run: yarn install --immutable
 
       - name: Check version
