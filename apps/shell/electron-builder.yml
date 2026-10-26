@@ -1,0 +1,24 @@
+# 서명 인증서가 없어서 macOS, Windows 모두 서명하지 않은 빌드를 만듦
+appId: io.github.ganimjeong.minipos
+productName: Mini POS
+artifactName: '${productName}-${version}-${os}-${arch}.${ext}'
+directories:
+  output: release
+# main, preload, 번들까지 dist 하나에 모아두므로 node_modules를 넣지 않음
+files:
+  - dist/**/*
+  - package.json
+# 네이티브 모듈이 없어서 다시 빌드할 게 없음
+npmRebuild: false
+mac:
+  category: public.app-category.business
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
