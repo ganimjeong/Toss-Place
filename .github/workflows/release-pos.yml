@@ -57,7 +57,15 @@ jobs:
           test "pos@$version" = "$GITHUB_REF_NAME"
 
       - run: yarn test
+
+      # 시크릿이 없으면 빈 문자열이 들어가고, 빌드는 모니터링 없이 진행됨
       - run: yarn build
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+          # 번들 결과물은 OS와 상관없이 같으므로 소스맵은 macOS 잡에서만 올림
+          SENTRY_AUTH_TOKEN: ${{ matrix.os == 'macos-latest' && secrets.SENTRY_AUTH_TOKEN || '' }}
 
       - run: yarn workspace @toss-place/shell package ${{ matrix.platform }}
 
