@@ -1,3 +1,6 @@
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
 import packageJson from '../package.json' with { type: 'json' };
@@ -25,15 +28,22 @@ describe('resolveBundleUrl', () => {
     expect(resolveBundleUrl('cash', { isDev: true })).toBe('http://localhost:5174');
   });
 
+  // 기대 URL을 문자열로 적으면 OS마다 절대 경로 해석이 달라서(Windows는 드라이브 문자가 붙음) 성질로 검사함
   it('배포 시에는 셸 dist에 복사된 번들 파일 주소를 돌려줌', () => {
-    expect(resolveBundleUrl('order', { isDev: false, baseDir: '/app.asar/dist' })).toBe(
-      'file:///app.asar/dist/bundles/order/index.html',
-    );
+    const baseDir = resolve('app.asar', 'dist');
+
+    const url = resolveBundleUrl('order', { isDev: false, baseDir });
+
+    expect(url.startsWith('file:///')).toBe(true);
+    expect(fileURLToPath(url)).toBe(join(baseDir, 'bundles', 'order', 'index.html'));
   });
 
-  it('경로의 공백과 한글을 URL로 인코딩함', () => {
-    expect(
-      resolveBundleUrl('order', { isDev: false, baseDir: '/Applications/Mini POS/포스' }),
-    ).toBe('file:///Applications/Mini%20POS/%ED%8F%AC%EC%8A%A4/bundles/order/index.html');
+  it('경로의 공백, 한글, 백슬래시가 URL에 그대로 남지 않음', () => {
+    const baseDir = resolve('Mini POS', '포스');
+
+    const url = resolveBundleUrl('order', { isDev: false, baseDir });
+
+    expect(url).not.toMatch(/[\s\\가-힣]/);
+    expect(fileURLToPath(url)).toBe(join(baseDir, 'bundles', 'order', 'index.html'));
   });
 });
