@@ -40,6 +40,12 @@
 - 이점: 도메인별로 따로 배포할 수 있음. 번들은 실행 환경(Electron, Android, 브라우저)을 몰라도 됨
 - 선택 이유: 토스플레이스가 SLASH 24에서 공개한 구조를 작게 재현함
 
+### electron-builder
+
+- 이점: 설정 파일 하나로 macOS dmg, Windows nsis 설치 파일을 만듦. 서명, 공증, 자동 업데이트까지 같은 도구로 확장할 수 있음
+- 선택 이유: Electron Forge보다 설정이 선언적이고 CI에서 OS별로 돌리기 쉬움. 셸에 런타임 의존성이 없어서 node_modules 수집 같은 복잡한 부분을 쓰지 않음
+- 패키징한 앱을 `--smoke-test`로 띄워 번들이 실제로 그려지는지 CI에서 확인함
+
 ## 상태, 비동기
 
 ### TanStack Query (Suspense 모드)
