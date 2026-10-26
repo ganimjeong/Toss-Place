@@ -1,6 +1,8 @@
 import { createPaymentClient, createStorageJournal } from '@toss-place/payment-sdk';
 import { getPosBridge, type CardPaymentFailureReason } from '@toss-place/pos-bridge';
 
+import { createPaymentMonitoringPlugin } from './paymentMonitoringPlugin';
+
 /** 단말기 응답을 받지 못해서 실제로 승인됐는지 알 수 없는 사유 */
 const AMBIGUOUS_REASONS = new Set<CardPaymentFailureReason>(['TIMEOUT', 'DISCONNECTED']);
 
@@ -16,4 +18,5 @@ export const paymentClient = createPaymentClient({
   },
   isAmbiguous: reason => AMBIGUOUS_REASONS.has(reason),
   journal: createStorageJournal(window.localStorage, 'toss-place:order:payment-journal'),
+  plugins: [createPaymentMonitoringPlugin()],
 });
