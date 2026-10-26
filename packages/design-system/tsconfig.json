@@ -1,7 +1,9 @@
 {
-  "extends": "@toss-place/tsconfig/base.json",
+  "extends": "@toss-place/tsconfig/react.json",
   "compilerOptions": {
-    "lib": ["ES2023", "DOM"]
+    // 디자인 시스템은 Emotion에 의존하지 않음
+    "jsxImportSource": "react",
+    "types": []
   },
-  "include": ["src", "vitest.config.ts"]
+  "include": ["src", "vitest.setup.ts", "vitest.config.ts"]
 }
