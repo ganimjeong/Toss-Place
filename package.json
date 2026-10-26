@@ -1,0 +1,49 @@
+{
+  "name": "toss-place",
+  "private": true,
+  "packageManager": "yarn@4.18.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "workspaces": [
+    "apps/*",
+    "bundles/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "postinstall": "husky",
+    "dev:order": "yarn workspace @toss-place/order dev",
+    "dev:shell": "yarn workspace @toss-place/shell dev",
+    "build": "yarn workspaces foreach -Apt --exclude toss-place run build",
+    "typecheck": "yarn workspaces foreach -Ap --exclude toss-place run typecheck",
+    "test": "yarn workspaces foreach -Ap --exclude toss-place run test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@toss-place/eslint-config": "workspace:^",
+    "eslint": "^9.39.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "typescript": "~6.0.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css}": "prettier --write"
+  },
+  "dependenciesMeta": {
+    "@swc/core": {
+      "built": true
+    },
+    "esbuild": {
+      "built": true
+    }
+  }
+}
