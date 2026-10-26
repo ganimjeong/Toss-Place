@@ -1,0 +1,26 @@
+{
+  "name": "@toss-place/design-system",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "*.css.ts"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@vanilla-extract/css": "^1.21.3"
+  },
+  "devDependencies": {
+    "@toss-place/tsconfig": "workspace:^",
+    "@vanilla-extract/vite-plugin": "^5.2.6",
+    "typescript": "~6.0.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}
