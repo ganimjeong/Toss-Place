@@ -12,6 +12,7 @@ bundles/
   order/            주문, 카드 결제, 영수증 출력
   cash/             시재관리. 권종별 현금 세기와 과부족 확인, 금전함 열기
 packages/
+  payment-sdk/      결제 상태 전이, 중복 요청 방지, 결과를 모르는 결제의 조회와 복구 (npm 배포용)
   pos-bridge/       POS 기기 표준 인터페이스, 브라우저 개발용 mock, IPC 채널 이름
   design-system/    디자인 토큰 (Vanilla Extract)
   utils/            금액 계산 등 공통 유틸
@@ -23,6 +24,7 @@ research/           구조와 규칙을 정할 때 참고한 자료 정리
 
 - 번들은 다른 번들을 import할 수 없음. 공통 코드는 `packages`로 올림.
 - 번들은 Electron API를 직접 쓰지 않음. 기기 기능은 항상 `getPosBridge()`를 거침.
+- 카드 결제는 `@toss-place/payment-sdk`를 거침. 결제 중에 화면을 바꾸거나 앱이 꺼져도 다음 실행 때 결과를 조회함. 설계는 [packages/payment-sdk](packages/payment-sdk/README.md) 참고.
 
 ## 시작하기
 

@@ -71,6 +71,21 @@ export function createConfig({ ignores = [] } = {}) {
     },
 
     {
+      // 결제는 SDK를 거쳐야 멱등 키, 저널, 결과 조회가 붙음. 단말기 결제를 바로 부르면 이중 결제를 막을 수 없음
+      files: ['bundles/**/*.{ts,tsx}'],
+      ignores: ['**/paymentClient.ts', '**/*.test.{ts,tsx}'],
+      rules: {
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: "MemberExpression[property.name='requestCardPayment']",
+            message: '카드 결제는 @toss-place/payment-sdk의 pay로 요청해 주세요.',
+          },
+        ],
+      },
+    },
+
+    {
       files: ['**/*.mjs', '**/*.config.ts'],
       ...tseslint.configs.disableTypeChecked,
     },

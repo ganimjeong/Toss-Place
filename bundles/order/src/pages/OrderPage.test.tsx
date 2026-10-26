@@ -23,6 +23,7 @@ async function orderAmericanoAndPay() {
 
 afterEach(() => {
   delete window.posBridge;
+  localStorage.clear();
 });
 
 describe('OrderPage 결제 흐름', () => {
@@ -71,5 +72,47 @@ describe('OrderPage 결제 흐름', () => {
     expect(await screen.findByRole('dialog', { name: '결제하지 못했어요' })).toBeTruthy();
     await waitFor(() => expect(screen.getByText('아메리카노 1개')).toBeTruthy());
     expect(printReceipt).not.toHaveBeenCalled();
+  });
+
+  it('단말기 응답이 없어도 승인됐다면 다시 결제하지 않고 완료로 처리함', async () => {
+    const bridge = createMockPosBridge();
+    const requestCardPayment = vi.fn<PosBridge['requestCardPayment']>(async request => {
+      await bridge.requestCardPayment(request);
+      return { ok: false, reason: 'TIMEOUT' };
+    });
+    installPosBridge({ ...bridge, requestCardPayment });
+
+    await orderAmericanoAndPay();
+
+    expect(await screen.findByRole('dialog', { name: '결제가 완료되었어요' })).toBeTruthy();
+    expect(requestCardPayment).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('결제 중 화면이 닫혔을 때', () => {
+  it('다시 열면 승인된 결제를 알려줌', async () => {
+    const bridge = installPosBridge({});
+    await bridge.requestCardPayment({ idempotencyKey: 'lost-key', orderId: 'lost', amount: 4500 });
+    localStorage.setItem(
+      'toss-place:order:payment-journal',
+      JSON.stringify([
+        {
+          orderId: 'lost',
+          amount: 4500,
+          idempotencyKey: 'lost-key',
+          startedAt: '2026-10-27T00:00:00.000Z',
+        },
+      ]),
+    );
+
+    render(
+      <Providers>
+        <OrderPage />
+      </Providers>,
+    );
+
+    expect((await screen.findByRole('alert')).textContent).toContain(
+      '승인된 결제가 있어요. 4,500원',
+    );
   });
 });
