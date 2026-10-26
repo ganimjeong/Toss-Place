@@ -13,6 +13,21 @@ describe('createMockPosBridge', () => {
     expect(first).toEqual(second);
   });
 
+  it('승인한 결제는 멱등 키로 조회할 수 있다', async () => {
+    const bridge = createMockPosBridge();
+    const approved = await bridge.requestCardPayment({
+      idempotencyKey: 'a',
+      orderId: 'o',
+      amount: 1000,
+    });
+
+    expect(await bridge.getCardPayment('a')).toEqual({
+      ok: true,
+      value: { status: 'approved', approval: approved.ok && approved.value },
+    });
+    expect(await bridge.getCardPayment('b')).toEqual({ ok: true, value: { status: 'not-found' } });
+  });
+
   it('멱등 키가 다르면 새 승인 번호를 만든다', async () => {
     const bridge = createMockPosBridge();
 

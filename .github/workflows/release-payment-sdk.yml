@@ -1,0 +1,42 @@
+name: Release payment-sdk
+
+on:
+  push:
+    tags: ['payment-sdk@*']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # npm provenance에 필요함. 어떤 커밋과 워크플로에서 빌드됐는지 패키지에 서명으로 남김
+      id-token: write
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+
+      - run: corepack enable
+
+      - run: yarn install --immutable
+
+      # 태그와 package.json 버전이 다르면 잘못된 버전이 올라가므로 먼저 막음
+      - name: Check version
+        run: |
+          version=$(node -p "require('./packages/payment-sdk/package.json').version")
+          test "payment-sdk@$version" = "$GITHUB_REF_NAME"
+
+      - run: yarn workspace @toss-place/payment-sdk typecheck
+      - run: yarn workspace @toss-place/payment-sdk test
+      - run: yarn workspace @toss-place/payment-sdk check:package
+
+      # yarn pack이 publishConfig.exports를 반영한 tarball을 만들고, npm이 provenance를 붙여 올림
+      - run: npm publish package.tgz --provenance --access public
+        working-directory: packages/payment-sdk
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

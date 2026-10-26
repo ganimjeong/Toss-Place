@@ -3,4 +3,5 @@ export const POS_BRIDGE_CHANNELS = {
   printReceipt: 'pos-bridge:print-receipt',
   openCashDrawer: 'pos-bridge:open-cash-drawer',
   requestCardPayment: 'pos-bridge:request-card-payment',
+  getCardPayment: 'pos-bridge:get-card-payment',
 } as const;

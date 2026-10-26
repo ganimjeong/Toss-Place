@@ -8,6 +8,8 @@ const posBridge: PosBridge = {
   openCashDrawer: () => ipcRenderer.invoke(POS_BRIDGE_CHANNELS.openCashDrawer),
   requestCardPayment: request =>
     ipcRenderer.invoke(POS_BRIDGE_CHANNELS.requestCardPayment, request),
+  getCardPayment: idempotencyKey =>
+    ipcRenderer.invoke(POS_BRIDGE_CHANNELS.getCardPayment, idempotencyKey),
 };
 
 contextBridge.exposeInMainWorld('posBridge', posBridge);

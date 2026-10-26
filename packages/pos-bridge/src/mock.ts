@@ -28,5 +28,12 @@ export function createMockPosBridge(): PosBridge {
       approvals.set(idempotencyKey, approval);
       return Promise.resolve({ ok: true, value: approval });
     },
+    getCardPayment(idempotencyKey) {
+      const approval = approvals.get(idempotencyKey);
+      return Promise.resolve({
+        ok: true,
+        value: approval === undefined ? { status: 'not-found' } : { status: 'approved', approval },
+      });
+    },
   };
 }

@@ -22,10 +22,11 @@
 - 이점: 개발 서버가 빠름. SWC로 트랜스파일이 빠름
 - 선택 이유: 웹뷰 번들은 SSR이 필요 없는 SPA라 Next.js보다 가벼운 Vite가 맞음. Vite, SWC 모두 공고에 있음
 
-### tsdown (Electron 셸)
+### tsdown (Electron 셸, 결제 SDK)
 
 - 이점: 설정이 적고 빠른 TS 번들러. 라이브러리, Node 코드 빌드에 적합
 - 선택 이유: 디자인 시스템 공고에 나옴. 셸 코드는 Electron 런타임에서 바로 돌아야 해서 워크스페이스 패키지까지 한 파일로 묶을 필요가 있었음
+- 결제 SDK는 npm 배포용이라 ESM, CJS와 타입 선언(`.d.ts`, `.d.cts`)을 같이 냄. 워크스페이스 안에서는 빌드 없이 `src`를 쓰고, `publishConfig.exports`로 배포할 때만 `dist`를 가리킴
 
 ## 앱 구조
 
@@ -111,7 +112,13 @@
 - 이점: 커밋할 때 포맷, 린트, 커밋 메시지 형식을 자동으로 검사함
 - 선택 이유: 토스가 Conventional Commits를 쓴다고 공개함. 리뷰에서 스타일 얘기를 없애려고 씀
 
+### arethetypeswrong, publint
+
+- 이점: 실제로 올라갈 tarball을 열어서 ESM, CJS 각각에서 타입과 파일 경로가 맞게 풀리는지 검사함
+- 선택 이유: 라이브러리는 빌드가 성공해도 소비자 환경에서 타입이 안 잡히는 일이 흔함. 결제 SDK를 npm에 올리기 전에 CI에서 막으려고 씀
+
 ### GitHub Actions
 
 - 이점: PR마다 포맷, 린트, 타입, 테스트, 빌드, PR 제목 형식을 검사함
 - 선택 이유: 모든 공고의 공통 CI
+- 결제 SDK는 `payment-sdk@x.y.z` 태그를 올리면 테스트, 패키지 검사 후 `npm publish --provenance`로 배포함

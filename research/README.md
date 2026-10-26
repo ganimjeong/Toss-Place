@@ -3,14 +3,15 @@
 레포의 기술 스택, 구조, 규칙을 정할 때 참고한 공개 자료를 정리한 폴더임.
 토스 내부 문서는 볼 수 없으므로 채용 공고, 기술 블로그, 컨퍼런스 기사, 토스 오픈소스 레포를 근거로 삼음.
 
-| 파일                                         | 내용                                     |
-| -------------------------------------------- | ---------------------------------------- |
-| [01-toss-place-pos.md](01-toss-place-pos.md) | 토스플레이스 POS 제품과 프론트엔드 구조  |
-| [02-tech-stack.md](02-tech-stack.md)         | 채용 공고 기술 스택과 이 레포의 선택     |
-| [03-code-quality.md](03-code-quality.md)     | Frontend Fundamentals 좋은 코드 기준     |
-| [04-git-workflow.md](04-git-workflow.md)     | 브랜치, 커밋, PR, 리뷰 문화              |
-| [05-design-tokens.md](05-design-tokens.md)   | TDS 토큰 구조와 자체 토큰 설계           |
-| [06-evaluation.md](06-evaluation.md)         | 토스 프론트엔드가 코드를 볼 때 보는 기준 |
+| 파일                                                   | 내용                                     |
+| ------------------------------------------------------ | ---------------------------------------- |
+| [01-toss-place-pos.md](01-toss-place-pos.md)           | 토스플레이스 POS 제품과 프론트엔드 구조  |
+| [02-tech-stack.md](02-tech-stack.md)                   | 채용 공고 기술 스택과 이 레포의 선택     |
+| [03-code-quality.md](03-code-quality.md)               | Frontend Fundamentals 좋은 코드 기준     |
+| [04-git-workflow.md](04-git-workflow.md)               | 브랜치, 커밋, PR, 리뷰 문화              |
+| [05-design-tokens.md](05-design-tokens.md)             | TDS 토큰 구조와 자체 토큰 설계           |
+| [06-evaluation.md](06-evaluation.md)                   | 토스 프론트엔드가 코드를 볼 때 보는 기준 |
+| [07-payment-reliability.md](07-payment-reliability.md) | 멱등 키, 결과를 모르는 결제의 조회       |
 
 ## 표기
 
