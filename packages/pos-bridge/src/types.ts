@@ -34,11 +34,14 @@ export interface CardPaymentApproval {
   amount: number;
 }
 
+export type ReceiptPrintFailureReason = DeviceErrorReason | 'PAPER_EMPTY';
+export type ReceiptPrintResult = BridgeResult<void, ReceiptPrintFailureReason>;
+
 export type CardPaymentFailureReason = DeviceErrorReason | 'DECLINED' | 'CANCELED';
 export type CardPaymentResult = BridgeResult<CardPaymentApproval, CardPaymentFailureReason>;
 
 export interface PosBridge {
-  printReceipt(receipt: Receipt): Promise<BridgeResult<void, DeviceErrorReason | 'PAPER_EMPTY'>>;
+  printReceipt(receipt: Receipt): Promise<ReceiptPrintResult>;
   openCashDrawer(): Promise<BridgeResult<void, DeviceErrorReason>>;
   requestCardPayment(request: CardPaymentRequest): Promise<CardPaymentResult>;
 }

@@ -1,28 +1,44 @@
 import { css } from '@emotion/react';
 import { Button, vars } from '@toss-place/design-system';
+import { useId } from 'react';
+
+interface Action {
+  label: string;
+  onClick: () => void;
+}
 
 interface Props {
   isOpen: boolean;
   title: string;
   description: string;
-  onClose: () => void;
+  confirm: Action;
+  cancel?: Action;
 }
 
-export function PaymentResultDialog({ isOpen, title, description, onClose }: Props) {
+export function ResultDialog({ isOpen, title, description, confirm, cancel }: Props) {
+  const titleId = useId();
+
   if (!isOpen) {
     return null;
   }
 
   return (
     <div css={dimStyle}>
-      <div role="dialog" aria-modal="true" aria-labelledby="payment-result-title" css={dialogStyle}>
-        <h2 id="payment-result-title" css={titleStyle}>
+      <div role="dialog" aria-modal="true" aria-labelledby={titleId} css={dialogStyle}>
+        <h2 id={titleId} css={titleStyle}>
           {title}
         </h2>
         <p css={descriptionStyle}>{description}</p>
-        <Button fullWidth onClick={onClose}>
-          확인
-        </Button>
+        <div css={actionsStyle}>
+          {cancel !== undefined && (
+            <Button variant="secondary" fullWidth onClick={cancel.onClick}>
+              {cancel.label}
+            </Button>
+          )}
+          <Button fullWidth onClick={confirm.onClick}>
+            {confirm.label}
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -55,4 +71,9 @@ const descriptionStyle = css`
   font-size: ${vars.typography.t6.fontSize};
   line-height: ${vars.typography.t6.lineHeight};
   color: ${vars.color.textSecondary};
+`;
+
+const actionsStyle = css`
+  display: flex;
+  gap: ${vars.spacing.x2};
 `;
