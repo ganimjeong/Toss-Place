@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { vars } from '@toss-place/design-system';
+import { Button, vars } from '@toss-place/design-system';
 
 interface Props {
   isOpen: boolean;
@@ -20,9 +20,9 @@ export function PaymentResultDialog({ isOpen, title, description, onClose }: Pro
           {title}
         </h2>
         <p css={descriptionStyle}>{description}</p>
-        <button type="button" css={closeButtonStyle} onClick={onClose}>
+        <Button fullWidth onClick={onClose}>
           확인
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -55,15 +55,4 @@ const descriptionStyle = css`
   font-size: ${vars.typography.t6.fontSize};
   line-height: ${vars.typography.t6.lineHeight};
   color: ${vars.color.textSecondary};
-`;
-
-const closeButtonStyle = css`
-  width: 100%;
-  min-height: ${vars.size.touchTarget};
-  border: none;
-  border-radius: ${vars.radius.medium};
-  background: ${vars.color.primary};
-  color: ${vars.color.textOnPrimary};
-  font-size: ${vars.typography.t5.fontSize};
-  cursor: pointer;
 `;

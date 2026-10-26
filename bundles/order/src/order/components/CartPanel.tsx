@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { vars } from '@toss-place/design-system';
+import { Button, vars } from '@toss-place/design-system';
 import { formatWon } from '@toss-place/utils';
 
 import type { CartItem } from '../models';
@@ -24,14 +24,14 @@ export function CartPanel({ items, totalAmount, isPaying, onRemove, onPay }: Pro
               {menu.name} {quantity}개
             </span>
             <span css={amountStyle}>{formatWon(menu.price * quantity)}</span>
-            <button
-              type="button"
-              css={removeButtonStyle}
+            <Button
+              variant="secondary"
+              size="medium"
               aria-label={`${menu.name} 하나 빼기`}
               onClick={() => onRemove(menu.id)}
             >
               빼기
-            </button>
+            </Button>
           </li>
         ))}
       </ul>
@@ -41,9 +41,9 @@ export function CartPanel({ items, totalAmount, isPaying, onRemove, onPay }: Pro
         <span css={amountStyle}>{formatWon(totalAmount)}</span>
       </div>
 
-      <button type="button" css={payButtonStyle} disabled={isEmpty || isPaying} onClick={onPay}>
+      <Button fullWidth disabled={isEmpty || isPaying} onClick={onPay}>
         {isPaying ? '결제 중' : '카드 결제'}
-      </button>
+      </Button>
     </section>
   );
 }
@@ -80,16 +80,6 @@ const amountStyle = css`
   font-variant-numeric: tabular-nums;
 `;
 
-const removeButtonStyle = css`
-  min-width: ${vars.size.touchTarget};
-  min-height: 40px;
-  border: 1px solid ${vars.color.borderStrong};
-  border-radius: ${vars.radius.small};
-  background: ${vars.color.bgSurface};
-  color: ${vars.color.textSecondary};
-  cursor: pointer;
-`;
-
 const totalStyle = css`
   display: flex;
   justify-content: space-between;
@@ -97,23 +87,4 @@ const totalStyle = css`
   font-size: ${vars.typography.t3.fontSize};
   line-height: ${vars.typography.t3.lineHeight};
   font-weight: ${vars.fontWeight.bold};
-`;
-
-const payButtonStyle = css`
-  min-height: ${vars.size.touchTarget};
-  border: none;
-  border-radius: ${vars.radius.medium};
-  background: ${vars.color.primary};
-  color: ${vars.color.textOnPrimary};
-  font-size: ${vars.typography.t5.fontSize};
-  font-weight: ${vars.fontWeight.bold};
-  cursor: pointer;
-
-  &:active {
-    background: ${vars.color.primaryPressed};
-  }
-  &:disabled {
-    background: ${vars.color.borderStrong};
-    cursor: default;
-  }
 `;
