@@ -9,5 +9,7 @@ export type {
   DeviceErrorReason,
   PosBridge,
   Receipt,
+  ReceiptPrintFailureReason,
+  ReceiptPrintResult,
   ReceiptLine,
 } from './types';
