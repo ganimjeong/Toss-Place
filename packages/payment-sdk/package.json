@@ -1,0 +1,57 @@
+{
+  "name": "@toss-place/payment-sdk",
+  "version": "0.1.0",
+  "description": "POS 결제 상태 전이, 중복 요청 방지, 결과를 모르는 결제의 조회와 복구를 맡는 SDK",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.cts",
+    "exports": {
+      ".": {
+        "import": {
+          "types": "./dist/index.d.ts",
+          "default": "./dist/index.js"
+        },
+        "require": {
+          "types": "./dist/index.d.cts",
+          "default": "./dist/index.cjs"
+        }
+      },
+      "./package.json": "./package.json"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "payment",
+    "pos",
+    "idempotency"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check:package": "yarn pack --out package.tgz && attw package.tgz --profile node16 && publint package.tgz"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
+    "@toss-place/tsconfig": "workspace:^",
+    "publint": "^0.3.15",
+    "tsdown": "^0.23.2",
+    "typescript": "~6.0.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}
