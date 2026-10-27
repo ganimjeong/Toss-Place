@@ -5,14 +5,25 @@ import { formatWon } from '@toss-place/utils';
 import { useMenusQuery } from '../hooks/useMenusQuery';
 import type { Menu } from '../models';
 
-export function MenuGrid({ onSelect }: { onSelect: (menu: Menu) => void }) {
+interface Props {
+  onSelect: (menu: Menu) => void;
+  /** 결제 중이거나 결과를 확인하기 전에는 장바구니를 바꾸지 못하게 함 */
+  disabled?: boolean;
+}
+
+export function MenuGrid({ onSelect, disabled = false }: Props) {
   const { data: menus } = useMenusQuery();
 
   return (
     <ul css={gridStyle}>
       {menus.map(menu => (
         <li key={menu.id}>
-          <button type="button" css={menuButtonStyle} onClick={() => onSelect(menu)}>
+          <button
+            type="button"
+            css={menuButtonStyle}
+            disabled={disabled}
+            onClick={() => onSelect(menu)}
+          >
             <span css={menuNameStyle}>{menu.name}</span>
             <span css={menuPriceStyle}>{formatWon(menu.price)}</span>
           </button>
@@ -56,8 +67,13 @@ const menuButtonStyle = css`
   text-align: left;
   cursor: pointer;
 
-  &:active {
+  &:not(:disabled):active {
     background: ${vars.color.bgBase};
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 `;
 
