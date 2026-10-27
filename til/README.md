@@ -12,6 +12,7 @@
 | 2026-10-26 | [시재관리 번들](2026-10-26-cash-bundle.md)                      |
 | 2026-10-26 | [셸 번들 전환과 CSP](2026-10-26-shell-bundle-switch.md)         |
 | 2026-10-27 | [결제 SDK](2026-10-27-payment-sdk.md)                           |
+| 2026-10-27 | [셸 패키징과 릴리스](2026-10-27-shell-packaging.md)             |
 
 참고: [기술 스택 선택 이유](tech-stack.md)
 

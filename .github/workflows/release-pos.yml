@@ -1,0 +1,92 @@
+name: Release POS
+
+on:
+  push:
+    tags: ['pos@*']
+  # 셸, 번들 경로, 패키징 설정을 바꾸는 PR에서는 릴리스 없이 OS별 패키징과 스모크 테스트만 돌림
+  pull_request:
+    paths:
+      - apps/shell/**
+      - packages/vite-config/**
+      - .github/workflows/release-pos.yml
+  workflow_dispatch:
+
+concurrency:
+  group: release-pos-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    strategy:
+      # 한 OS가 실패해도 다른 OS 결과를 끝까지 보려고 끔
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            platform: --mac
+            app: release/mac-arm64/Mini POS.app/Contents/MacOS/Mini POS
+          - os: windows-latest
+            platform: --win
+            app: release/win-unpacked/Mini POS.exe
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      # 서명 인증서가 없으므로 키체인에서 인증서를 찾지 않게 함
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - run: corepack enable
+
+      # pnpm 링커는 전역 저장소에서 node_modules로 하드링크를 검. Windows 러너는 홈(C:)과 작업 폴더(D:)가
+      # 다른 드라이브라 하드링크가 실패(EXDEV)하므로 전역 폴더를 작업 폴더와 같은 드라이브에 둠
+      - run: echo "YARN_GLOBAL_FOLDER=$RUNNER_TEMP/yarn-global" >> "$GITHUB_ENV"
+
+      - run: yarn install --immutable
+
+      - name: Check version
+        if: github.ref_type == 'tag'
+        run: |
+          version=$(node -p "require('./apps/shell/package.json').version")
+          test "pos@$version" = "$GITHUB_REF_NAME"
+
+      - run: yarn test
+      - run: yarn build
+
+      - run: yarn workspace @toss-place/shell package ${{ matrix.platform }}
+
+      # 빌드 성공이 실행 성공은 아니므로, 패키징한 앱을 띄워 번들이 실제로 그려지는지 확인함
+      - name: Smoke test
+        working-directory: apps/shell
+        run: '"./${{ matrix.app }}" --smoke-test'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pos-${{ runner.os }}
+          path: |
+            apps/shell/release/*.dmg
+            apps/shell/release/*.exe
+          if-no-files-found: error
+
+  release:
+    needs: package
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      # 모든 OS 빌드와 스모크 테스트가 통과한 뒤에만 릴리스를 만듦
+      - run: gh release create "$GITHUB_REF_NAME" artifacts/* --repo "$GITHUB_REPOSITORY" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
