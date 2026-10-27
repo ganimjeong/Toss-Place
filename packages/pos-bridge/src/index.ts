@@ -4,6 +4,7 @@ export type {
   BridgeResult,
   CardPaymentApproval,
   CardPaymentFailureReason,
+  CardPaymentLookup,
   CardPaymentRequest,
   CardPaymentResult,
   DeviceErrorReason,

@@ -34,6 +34,15 @@ export interface CardPaymentApproval {
   amount: number;
 }
 
+/**
+ * 멱등 키로 조회한 단말기 승인 내역.
+ * 응답을 못 받은 결제는 손님이 아직 카드를 대는 중일 수 있어서 processing을 따로 둠
+ */
+export type CardPaymentLookup =
+  | { status: 'approved'; approval: CardPaymentApproval }
+  | { status: 'not-found' }
+  | { status: 'processing' };
+
 export type ReceiptPrintFailureReason = DeviceErrorReason | 'PAPER_EMPTY';
 export type ReceiptPrintResult = BridgeResult<void, ReceiptPrintFailureReason>;
 
@@ -44,4 +53,7 @@ export interface PosBridge {
   printReceipt(receipt: Receipt): Promise<ReceiptPrintResult>;
   openCashDrawer(): Promise<BridgeResult<void, DeviceErrorReason>>;
   requestCardPayment(request: CardPaymentRequest): Promise<CardPaymentResult>;
+  getCardPayment(
+    idempotencyKey: string,
+  ): Promise<BridgeResult<CardPaymentLookup, DeviceErrorReason>>;
 }

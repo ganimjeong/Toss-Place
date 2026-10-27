@@ -20,6 +20,9 @@ function registerPosBridge(devices: PosBridge) {
   ipcMain.handle(POS_BRIDGE_CHANNELS.requestCardPayment, (_event, request: CardPaymentRequest) =>
     devices.requestCardPayment(request),
   );
+  ipcMain.handle(POS_BRIDGE_CHANNELS.getCardPayment, (_event, idempotencyKey: string) =>
+    devices.getCardPayment(idempotencyKey),
+  );
 }
 
 function createMainWindow() {
