@@ -14,6 +14,7 @@
 | 2026-10-27 | [결제 SDK](2026-10-27-payment-sdk.md)                           |
 | 2026-10-27 | [셸 패키징과 릴리스](2026-10-27-shell-packaging.md)             |
 | 2026-10-27 | [Sentry 연결](2026-10-27-sentry.md)                             |
+| 2026-10-27 | [PR #6, #7, #8 회고](2026-10-27-pr-retrospective.md)            |
 
 참고: [기술 스택 선택 이유](tech-stack.md)
 
