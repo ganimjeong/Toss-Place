@@ -15,6 +15,7 @@
     "@suspensive/react": "^3.21.4",
     "@tanstack/react-query": "^5.104.5",
     "@toss-place/design-system": "workspace:^",
+    "@toss-place/monitoring": "workspace:^",
     "@toss-place/payment-sdk": "workspace:^",
     "@toss-place/pos-bridge": "workspace:^",
     "@toss-place/utils": "workspace:^",

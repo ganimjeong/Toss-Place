@@ -64,6 +64,11 @@ export function createConfig({ ignores = [] } = {}) {
                 ],
                 message: '번들 간 직접 참조는 금지입니다. 공통 코드는 packages로 옮겨 주세요.',
               },
+              {
+                group: ['@sentry/*'],
+                message:
+                  '모니터링은 @toss-place/monitoring을 거쳐 주세요. 수집 정책을 한곳에서 관리합니다.',
+              },
             ],
           },
         ],
