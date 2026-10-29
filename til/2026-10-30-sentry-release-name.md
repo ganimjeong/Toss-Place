@@ -35,4 +35,5 @@
 
 - `@toss-place/vite-config` 테스트, 타입, 린트 통과
 - 가짜 토큰 빌드가 실패하는 것 확인
-- 실제 업로드는 이 PR 머지 뒤 다음 `pos@*` 태그에서 확인해야 함
+- PR #15의 Release POS 패키징에서 `Successfully uploaded source maps to Sentry`가 번들 두 개 모두 찍힘. Sentry 릴리스 화면에 `toss-place-order`, `toss-place-cash`가 생긴 것도 확인함. 둘 다 버전이 `0.0.0`이라 3번 고민이 화면에서도 그대로 보임
+- `pos@0.1.0` 설치 파일은 고치기 전 이름으로 빌드돼 번들의 릴리스 값도 `/`가 든 이름임. 셸을 `0.1.1`로 올려 다시 릴리스함
