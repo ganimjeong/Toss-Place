@@ -310,3 +310,48 @@ describe('plugins', () => {
     expect(onStateChange).not.toHaveBeenCalled();
   });
 });
+
+describe('영업시간 내내 켜 두는 포스', () => {
+  const payOrders = async (client: ReturnType<typeof setup>['client'], count: number) => {
+    for (let index = 1; index <= count; index += 1) {
+      await client.pay({ orderId: `order-${index}`, amount: 4500 });
+    }
+  };
+
+  it('확정된 주문의 상태는 최근 건수만 남김', async () => {
+    const { client } = setup({ settledStateLimit: 3 });
+
+    await payOrders(client, 5);
+
+    expect(client.getState('order-1').status).toBe('idle');
+    expect(client.getState('order-2').status).toBe('idle');
+    expect(client.getState('order-3').status).toBe('approved');
+    expect(client.getState('order-5').status).toBe('approved');
+  });
+
+  it('결과를 모르는 주문은 확정된 주문이 아무리 쌓여도 지우지 않음', async () => {
+    vi.useFakeTimers();
+    const { client, transport } = setup({ settledStateLimit: 3 });
+    transport.approve.mockResolvedValueOnce(timeout);
+    transport.lookup.mockResolvedValueOnce({ ok: false, reason: 'TIMEOUT' });
+    transport.lookup.mockResolvedValueOnce({ ok: false, reason: 'TIMEOUT' });
+    transport.lookup.mockResolvedValueOnce({ ok: false, reason: 'TIMEOUT' });
+    const lost = client.pay({ orderId: 'lost', amount: 4500 });
+    await vi.advanceTimersByTimeAsync(2000);
+    await lost;
+
+    await payOrders(client, 10);
+
+    expect(client.getState('lost').status).toBe('unknown');
+  });
+
+  it('상태를 지운 주문을 다시 결제해도 확정 상태였을 때와 똑같이 새로 요청함', async () => {
+    const { client, transport } = setup({ settledStateLimit: 1 });
+    await payOrders(client, 2);
+
+    const outcome = await client.pay({ orderId: 'order-1', amount: 4500 });
+
+    expect(outcome.status).toBe('approved');
+    expect(transport.approve).toHaveBeenCalledTimes(3);
+  });
+});

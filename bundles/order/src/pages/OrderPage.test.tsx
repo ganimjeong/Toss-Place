@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMockPosBridge, type PosBridge } from '@toss-place/pos-bridge';
+import { useOverlayData } from 'overlay-kit';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { Providers } from '../app/Providers';
@@ -86,6 +87,57 @@ describe('OrderPage 결제 흐름', () => {
 
     expect(await screen.findByRole('dialog', { name: '결제가 완료되었어요' })).toBeTruthy();
     expect(requestCardPayment).toHaveBeenCalledTimes(1);
+  });
+});
+
+/** 닫힌 다이얼로그는 화면에 그려지지 않아서, 오버레이 목록 크기로 남아 있는지 확인함 */
+function OverlayCount() {
+  return <output aria-label="오버레이 수">{Object.keys(useOverlayData()).length}</output>;
+}
+
+describe('영업시간 내내 켜 두는 포스', () => {
+  it('결제 결과 다이얼로그를 닫으면 오버레이 목록에서도 지움', async () => {
+    installPosBridge({});
+    render(
+      <Providers>
+        <OrderPage />
+        <OverlayCount />
+      </Providers>,
+    );
+
+    for (let payment = 0; payment < 3; payment++) {
+      fireEvent.click(await screen.findByRole('button', { name: /아메리카노/ }));
+      fireEvent.click(screen.getByRole('button', { name: '카드 결제' }));
+      await screen.findByRole('dialog', { name: '결제가 완료되었어요' });
+      fireEvent.click(screen.getByRole('button', { name: '확인' }));
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    }
+
+    expect(screen.getByLabelText('오버레이 수').textContent).toBe('0');
+  });
+
+  it('영수증 출력 실패 다이얼로그도 답한 뒤 목록에서 지움', async () => {
+    installPosBridge({
+      printReceipt: vi
+        .fn<PosBridge['printReceipt']>()
+        .mockResolvedValueOnce({ ok: false, reason: 'PAPER_EMPTY' })
+        .mockResolvedValueOnce({ ok: true, value: undefined }),
+    });
+    render(
+      <Providers>
+        <OrderPage />
+        <OverlayCount />
+      </Providers>,
+    );
+
+    fireEvent.click(await screen.findByRole('button', { name: /아메리카노/ }));
+    fireEvent.click(screen.getByRole('button', { name: '카드 결제' }));
+    await screen.findByRole('dialog', { name: '영수증을 출력하지 못했어요' });
+    fireEvent.click(screen.getByRole('button', { name: '다시 출력' }));
+    await screen.findByRole('dialog', { name: '결제가 완료되었어요' });
+    fireEvent.click(screen.getByRole('button', { name: '확인' }));
+
+    await waitFor(() => expect(screen.getByLabelText('오버레이 수').textContent).toBe('0'));
   });
 });
 

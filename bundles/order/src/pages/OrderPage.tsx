@@ -68,8 +68,9 @@ export function OrderPage() {
 }
 
 function openResultDialog(message: { title: string; description: string }) {
-  overlay.open(({ isOpen, close }) => (
-    <ResultDialog isOpen={isOpen} {...message} confirm={{ label: '확인', onClick: close }} />
+  // close는 isOpen만 false로 바꾸고 오버레이를 목록에 남김. 결제마다 하나씩 쌓이므로 닫을 때 unmount로 지움
+  overlay.open(({ isOpen, unmount }) => (
+    <ResultDialog isOpen={isOpen} {...message} confirm={{ label: '확인', onClick: unmount }} />
   ));
 }
 
