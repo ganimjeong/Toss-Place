@@ -1,6 +1,6 @@
 {
   "name": "@toss-place/shell",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "매장용 미니 POS 데스크톱 셸",
   "author": "ganimjeong",
   "private": true,
