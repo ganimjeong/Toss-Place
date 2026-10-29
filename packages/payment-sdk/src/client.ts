@@ -32,6 +32,11 @@ export interface PaymentClientOptions<Reason extends string> {
   createIdempotencyKey?: () => string;
   now?: () => Date;
   onPluginError?: (error: unknown, pluginName: string) => void;
+  /**
+   * 승인, 실패로 확정된 주문의 상태를 최근 몇 건까지 남길지. 기본 50건.
+   * 포스는 영업시간 내내 켜져 있어서 주문마다 상태를 남기면 결제 수만큼 메모리가 늘어남
+   */
+  settledStateLimit?: number;
 }
 
 export interface PaymentClient<Reason extends string> {
@@ -47,6 +52,8 @@ export interface PaymentClient<Reason extends string> {
   /** 플러그인을 등록하고, 해제 함수를 돌려줌 */
   use(plugin: PaymentPlugin<Reason>): () => void;
 }
+
+const DEFAULT_SETTLED_STATE_LIMIT = 50;
 
 const DEFAULT_RECONCILE = {
   maxAttempts: 5,
@@ -71,14 +78,37 @@ export function createPaymentClient<Reason extends string>(
   const plugins = new Set(options.plugins);
   const states = new Map<string, PaymentState<Reason>>();
   const inflight = new Map<string, Promise<PaymentOutcome<Reason>>>();
+  // 확정된 주문을 확정된 순서대로 둠. 오래된 것부터 지움
+  const settledOrders = new Set<string>();
+  const settledStateLimit = options.settledStateLimit ?? DEFAULT_SETTLED_STATE_LIMIT;
 
   const getState = (orderId: string): PaymentState<Reason> =>
     states.get(orderId) ?? { status: 'idle' };
+
+  /**
+   * 확정 상태(approved, failed)는 idle과 받는 이벤트가 같아서(REQUEST만 받음) 지워도 결제 흐름이 바뀌지 않음.
+   * 진행 중이거나 결과를 모르는 상태는 이전 시도를 지켜야 하므로 지우지 않음
+   */
+  const trackSettled = (orderId: string, state: PaymentState<Reason>) => {
+    settledOrders.delete(orderId);
+    if (state.status !== 'approved' && state.status !== 'failed') {
+      return;
+    }
+    settledOrders.add(orderId);
+    for (const oldest of settledOrders) {
+      if (settledOrders.size <= settledStateLimit) {
+        break;
+      }
+      settledOrders.delete(oldest);
+      states.delete(oldest);
+    }
+  };
 
   const dispatch = (orderId: string, event: PaymentEvent<Reason>) => {
     const previous = getState(orderId);
     const next = transition(previous, event);
     states.set(orderId, next);
+    trackSettled(orderId, next);
     for (const plugin of plugins) {
       notify(plugin, () => plugin.onStateChange?.({ orderId, previous, next }));
     }

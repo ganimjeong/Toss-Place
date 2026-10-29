@@ -20,15 +20,22 @@ export async function printReceiptWithRetry(receipt: Receipt): Promise<boolean> 
       return true;
     }
 
-    const shouldRetry = await overlay.openAsync<boolean>(({ isOpen, close }) => (
-      <ResultDialog
-        isOpen={isOpen}
-        title="영수증을 출력하지 못했어요"
-        description={PRINT_FAILURE_MESSAGES[result.reason]}
-        cancel={{ label: '건너뛰기', onClick: () => close(false) }}
-        confirm={{ label: '다시 출력', onClick: () => close(true) }}
-      />
-    ));
+    const shouldRetry = await overlay.openAsync<boolean>(({ isOpen, close, unmount }) => {
+      // close로 응답을 돌려준 뒤 unmount로 목록에서 지움. 다시 출력을 반복해도 다이얼로그가 쌓이지 않게 함
+      const answer = (retry: boolean) => {
+        close(retry);
+        unmount();
+      };
+      return (
+        <ResultDialog
+          isOpen={isOpen}
+          title="영수증을 출력하지 못했어요"
+          description={PRINT_FAILURE_MESSAGES[result.reason]}
+          cancel={{ label: '건너뛰기', onClick: () => answer(false) }}
+          confirm={{ label: '다시 출력', onClick: () => answer(true) }}
+        />
+      );
+    });
     if (!shouldRetry) {
       return false;
     }
