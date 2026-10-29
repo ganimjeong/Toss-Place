@@ -33,7 +33,7 @@ jobs:
       - run: yarn build
 
       # npm에 올라갈 모양(exports, 타입 선언)이 ESM, CJS 양쪽에서 맞는지 확인함
-      - run: yarn workspace @ganimjeong/payment-sdk check:package
+      - run: yarn workspace @ajinjeong/payment-sdk check:package
 
   pr-title:
     if: github.event_name == 'pull_request'

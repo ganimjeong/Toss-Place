@@ -1,4 +1,4 @@
-import { createPaymentClient, createStorageJournal } from '@ganimjeong/payment-sdk';
+import { createPaymentClient, createStorageJournal } from '@ajinjeong/payment-sdk';
 import { getPosBridge, type CardPaymentFailureReason } from '@toss-place/pos-bridge';
 
 import { createPaymentMonitoringPlugin } from './paymentMonitoringPlugin';

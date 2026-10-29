@@ -1,5 +1,5 @@
 {
-  "name": "@ganimjeong/payment-sdk",
+  "name": "@ajinjeong/payment-sdk",
   "version": "0.1.0",
   "description": "POS 결제 상태 전이, 중복 요청 방지, 결과를 모르는 결제의 조회와 복구를 맡는 SDK",
   "license": "MIT",

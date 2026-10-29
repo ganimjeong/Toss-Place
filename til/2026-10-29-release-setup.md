@@ -10,7 +10,8 @@
 
 - 이슈: 워크스페이스 패키지가 전부 `@toss-place/*`라 SDK도 `@toss-place/payment-sdk`였음. npm scope는 계정이나 조직이 소유해야 쓸 수 있고, `@toss-place`는 내 것이 아님
 - 고민: 가능하더라도 `toss-place`라는 이름으로 공개 패키지를 올리면 토스 공식 패키지로 오해받을 수 있음
-- 결정: npm에 공개되는 SDK만 `@ganimjeong/payment-sdk`로 바꿈. 나머지 패키지는 레포 안에서만 쓰는 이름이라 그대로 둠
+- 결정: npm에 공개되는 SDK만 `@ajinjeong/payment-sdk`로 바꿈. 나머지 패키지는 레포 안에서만 쓰는 이름이라 그대로 둠
+- 한 번 더 바꿈: 처음엔 GitHub 아이디(`ganimjeong`)를 그대로 scope로 썼는데, 브라우저로 npm에 로그인한 뒤 프로필 주소를 보니 npm 아이디는 `ajinjeong`이었음. 두 아이디가 같을 거라고 확인 없이 가정한 것. 패키지 이름은 npm 아이디를 따라 `@ajinjeong/payment-sdk`로 바꾸고, `repository`와 Trusted Publisher에 넣는 저장소 주인은 GitHub 아이디(`ganimjeong`) 그대로 둠. 한 패키지 설정 안에 서로 다른 서비스의 아이디가 섞이는 지점이라 CONTRIBUTING에도 구분해서 적음
 - 대가: 레포 안에 scope가 두 개가 됨. 대신 "이 패키지만 공개된다"는 사실이 import 경로에서 드러남
 - 지난 회고(`2026-10-27-payment-sdk.md`)의 `@toss-place/payment-sdk` 표기는 그때의 결정 기록이라 고치지 않음
 

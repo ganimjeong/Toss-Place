@@ -1,4 +1,4 @@
-import type { PaymentRequest } from '@ganimjeong/payment-sdk';
+import type { PaymentRequest } from '@ajinjeong/payment-sdk';
 import { useMutation } from '@tanstack/react-query';
 
 import { paymentClient } from './paymentClient';

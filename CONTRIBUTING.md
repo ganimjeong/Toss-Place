@@ -69,7 +69,7 @@ refactor(utils): 금액 나누기 로직을 splitWon으로 분리
 4. 로딩 화면은 실제 레이아웃과 같은 크기의 스켈레톤으로 만들어 화면이 밀리지 않게 함.
 5. 모달, 다이얼로그는 `overlay-kit`의 `overlay.open`으로 띄움. 열림 상태를 여기저기 들고 다니지 않음.
 6. 금액은 원 단위 정수로만 다루고, 계산은 `@toss-place/utils`의 금액 함수를 씀. 금액 표시에는 `tabular-nums`를 적용함.
-7. 카드 결제는 `@ganimjeong/payment-sdk`의 `pay`로만 요청함. 멱등 키, 결과를 모르는 결제의 조회, 저널은 SDK가 맡음. 번들에서 `requestCardPayment`를 직접 부르면 린트가 막음.
+7. 카드 결제는 `@ajinjeong/payment-sdk`의 `pay`로만 요청함. 멱등 키, 결과를 모르는 결제의 조회, 저널은 SDK가 맡음. 번들에서 `requestCardPayment`를 직접 부르면 린트가 막음.
 8. 기기 기능은 `getPosBridge()`로만 호출하고 실패 사유별 안내 문구를 둠. 번들에서 Electron API를 직접 쓰지 않음.
 9. 버튼처럼 누르는 요소는 `vars.size.touchTarget` 이상 크기로 만듦.
 10. 접근성 린트(jsx-a11y) 경고를 무시하지 않음. 아이콘 버튼에는 `aria-label`을 붙임.
@@ -86,10 +86,10 @@ refactor(utils): 금액 나누기 로직을 splitWon으로 분리
 
 ## 배포
 
-| 대상                                 | 방법                          | 필요한 설정                                   |
-| ------------------------------------ | ----------------------------- | --------------------------------------------- |
-| 결제 SDK (`@ganimjeong/payment-sdk`) | `payment-sdk@x.y.z` 태그 push | npmjs.com의 Trusted Publisher 등록. 토큰 없음 |
-| POS 앱 (macOS dmg, Windows exe)      | `pos@x.y.z` 태그 push         | 없음. Sentry를 켜려면 아래 시크릿과 변수      |
+| 대상                                | 방법                          | 필요한 설정                                   |
+| ----------------------------------- | ----------------------------- | --------------------------------------------- |
+| 결제 SDK (`@ajinjeong/payment-sdk`) | `payment-sdk@x.y.z` 태그 push | npmjs.com의 Trusted Publisher 등록. 토큰 없음 |
+| POS 앱 (macOS dmg, Windows exe)     | `pos@x.y.z` 태그 push         | 없음. Sentry를 켜려면 아래 시크릿과 변수      |
 
 태그의 버전은 해당 `package.json`의 `version`과 같아야 함. 다르면 워크플로가 패키징 전에 멈춤.
 
@@ -102,11 +102,11 @@ npm
 1. 첫 버전은 npm에 패키지가 있어야 신뢰 설정을 할 수 있으므로, 로그인한 사람이 로컬에서 한 번 직접 올림
    ```sh
    npm login
-   yarn workspace @ganimjeong/payment-sdk pack --out package.tgz
+   yarn workspace @ajinjeong/payment-sdk pack --out package.tgz
    npm publish packages/payment-sdk/package.tgz --access public
    ```
 2. npmjs.com의 패키지 Settings → Trusted Publisher → GitHub Actions에 아래 값을 넣음
-   - Organization or user: `ganimjeong`
+   - Organization or user: `ganimjeong` (GitHub 아이디. npm 아이디 `ajinjeong`과 다름)
    - Repository: `Toss-Place`
    - Workflow filename: `release-payment-sdk.yml`
 3. 같은 화면에서 Publishing access를 "Require two-factor authentication and disallow tokens"로 바꿔 토큰 배포를 막음
