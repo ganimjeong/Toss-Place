@@ -13,6 +13,7 @@
 | [06-evaluation.md](06-evaluation.md)                   | 토스 프론트엔드가 코드를 볼 때 보는 기준  |
 | [07-payment-reliability.md](07-payment-reliability.md) | 멱등 키, 결과를 모르는 결제의 조회        |
 | [08-monitoring.md](08-monitoring.md)                   | Sentry를 번들과 Electron 셸에 붙이는 방법 |
+| [09-pos-performance.md](09-pos-performance.md)         | 포스 화면 성능을 재는 지표와 조건         |
 
 ## 표기
 
