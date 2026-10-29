@@ -9,17 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      # npm provenance에 필요함. 어떤 커밋과 워크플로에서 빌드됐는지 패키지에 서명으로 남김
+      # npm Trusted Publishing(OIDC)에 필요함. 저장소에 npm 토큰을 두지 않고, 이 워크플로가 보낸 요청인지를 GitHub이 서명해서 증명함
       id-token: write
     env:
       ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
     steps:
       - uses: actions/checkout@v4
 
+      # registry-url을 주면 setup-node가 NODE_AUTH_TOKEN을 읽는 .npmrc를 만듦. 토큰 없이 OIDC로 인증하므로 넣지 않음
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          registry-url: https://registry.npmjs.org
 
       - run: corepack enable
 
@@ -31,12 +31,14 @@ jobs:
           version=$(node -p "require('./packages/payment-sdk/package.json').version")
           test "payment-sdk@$version" = "$GITHUB_REF_NAME"
 
-      - run: yarn workspace @toss-place/payment-sdk typecheck
-      - run: yarn workspace @toss-place/payment-sdk test
-      - run: yarn workspace @toss-place/payment-sdk check:package
+      # Trusted Publishing은 npm 11.5.1부터 됨. Node 버전을 올리다 npm이 낮아지면 publish에서야 실패하므로 먼저 막음
+      - name: Check npm version
+        run: node -e "const [a,b,c]=process.argv[1].split('.').map(Number); process.exit(a>11||(a===11&&(b>5||(b===5&&c>=1)))?0:1)" "$(npm --version)"
 
-      # yarn pack이 publishConfig.exports를 반영한 tarball을 만들고, npm이 provenance를 붙여 올림
-      - run: npm publish package.tgz --provenance --access public
+      - run: yarn workspace @ajinjeong/payment-sdk typecheck
+      - run: yarn workspace @ajinjeong/payment-sdk test
+      - run: yarn workspace @ajinjeong/payment-sdk check:package
+
+      # yarn pack이 publishConfig.exports를 반영한 tarball을 만듦. Trusted Publishing이면 provenance는 npm이 자동으로 붙임
+      - run: npm publish package.tgz --access public
         working-directory: packages/payment-sdk
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

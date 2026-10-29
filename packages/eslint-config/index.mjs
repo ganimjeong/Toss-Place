@@ -84,7 +84,7 @@ export function createConfig({ ignores = [] } = {}) {
           'error',
           {
             selector: "MemberExpression[property.name='requestCardPayment']",
-            message: '카드 결제는 @toss-place/payment-sdk의 pay로 요청해 주세요.',
+            message: '카드 결제는 @ajinjeong/payment-sdk의 pay로 요청해 주세요.',
           },
         ],
       },

@@ -1,5 +1,5 @@
 import { monitor, type Monitor } from '@toss-place/monitoring';
-import { definePaymentPlugin } from '@toss-place/payment-sdk';
+import { definePaymentPlugin } from '@ajinjeong/payment-sdk';
 import type { CardPaymentFailureReason } from '@toss-place/pos-bridge';
 
 /**
