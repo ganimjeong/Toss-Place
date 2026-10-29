@@ -1,4 +1,4 @@
-import type { PaymentFailureReason, PaymentOutcome } from '@toss-place/payment-sdk';
+import type { PaymentFailureReason, PaymentOutcome } from '@ganimjeong/payment-sdk';
 import type { CardPaymentFailureReason } from '@toss-place/pos-bridge';
 import { formatWon } from '@toss-place/utils';
 

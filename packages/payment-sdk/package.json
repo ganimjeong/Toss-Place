@@ -1,8 +1,16 @@
 {
-  "name": "@toss-place/payment-sdk",
+  "name": "@ganimjeong/payment-sdk",
   "version": "0.1.0",
   "description": "POS 결제 상태 전이, 중복 요청 방지, 결과를 모르는 결제의 조회와 복구를 맡는 SDK",
   "license": "MIT",
+  "author": "ganimjeong",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ganimjeong/Toss-Place.git",
+    "directory": "packages/payment-sdk"
+  },
+  "homepage": "https://github.com/ganimjeong/Toss-Place/tree/main/packages/payment-sdk#readme",
+  "bugs": "https://github.com/ganimjeong/Toss-Place/issues",
   "type": "module",
   "sideEffects": false,
   "engines": {

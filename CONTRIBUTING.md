@@ -69,7 +69,7 @@ refactor(utils): 금액 나누기 로직을 splitWon으로 분리
 4. 로딩 화면은 실제 레이아웃과 같은 크기의 스켈레톤으로 만들어 화면이 밀리지 않게 함.
 5. 모달, 다이얼로그는 `overlay-kit`의 `overlay.open`으로 띄움. 열림 상태를 여기저기 들고 다니지 않음.
 6. 금액은 원 단위 정수로만 다루고, 계산은 `@toss-place/utils`의 금액 함수를 씀. 금액 표시에는 `tabular-nums`를 적용함.
-7. 카드 결제는 `@toss-place/payment-sdk`의 `pay`로만 요청함. 멱등 키, 결과를 모르는 결제의 조회, 저널은 SDK가 맡음. 번들에서 `requestCardPayment`를 직접 부르면 린트가 막음.
+7. 카드 결제는 `@ganimjeong/payment-sdk`의 `pay`로만 요청함. 멱등 키, 결과를 모르는 결제의 조회, 저널은 SDK가 맡음. 번들에서 `requestCardPayment`를 직접 부르면 린트가 막음.
 8. 기기 기능은 `getPosBridge()`로만 호출하고 실패 사유별 안내 문구를 둠. 번들에서 Electron API를 직접 쓰지 않음.
 9. 버튼처럼 누르는 요소는 `vars.size.touchTarget` 이상 크기로 만듦.
 10. 접근성 린트(jsx-a11y) 경고를 무시하지 않음. 아이콘 버튼에는 `aria-label`을 붙임.
@@ -83,3 +83,29 @@ refactor(utils): 금액 나누기 로직을 splitWon으로 분리
 3. `vite.config.ts`에서 `createBundleConfig({ port })`로 겹치지 않는 포트를 정함
 4. `apps/shell/src/bundles.ts`의 `BUNDLES`에 같은 포트로 등록하고, 셸 `package.json`의 `devDependencies`에 `@toss-place/<name>`을 추가함. 빠뜨리면 빌드 순서가 보장되지 않고 셸 테스트가 실패함
 5. `packages/eslint-config/index.mjs`의 번들 간 참조 금지 목록에 이름을 추가함
+
+## 배포
+
+| 대상                                 | 방법                          | 필요한 설정                              |
+| ------------------------------------ | ----------------------------- | ---------------------------------------- |
+| 결제 SDK (`@ganimjeong/payment-sdk`) | `payment-sdk@x.y.z` 태그 push | 시크릿 `NPM_TOKEN`                       |
+| POS 앱 (macOS dmg, Windows exe)      | `pos@x.y.z` 태그 push         | 없음. Sentry를 켜려면 아래 시크릿과 변수 |
+
+태그의 버전은 해당 `package.json`의 `version`과 같아야 함. 다르면 워크플로가 패키징 전에 멈춤.
+
+### 처음 한 번 하는 설정
+
+npm
+
+1. npmjs.com에서 Access Tokens → Generate New Token → Granular Access Token
+2. Packages and scopes는 Read and write, 대상은 `@ganimjeong` scope로 제한함
+3. 터미널에서 `gh secret set NPM_TOKEN`을 실행하고 토큰을 붙여 넣음. 토큰을 파일이나 채팅에 남기지 않음
+
+Sentry
+
+1. sentry.io에서 조직을 만들고 플랫폼이 React인 프로젝트를 만듦
+2. Settings → Projects → 프로젝트 → Client Keys에서 DSN을 복사해 `gh secret set SENTRY_DSN`
+3. Settings → Auth Tokens에서 조직 토큰을 만들어 `gh secret set SENTRY_AUTH_TOKEN`. 소스맵 업로드에만 씀
+4. `gh variable set SENTRY_ORG --body <조직 slug>`, `gh variable set SENTRY_PROJECT --body <프로젝트 slug>`
+
+DSN은 앱에 그대로 들어가는 공개 값이지만, 저장소 코드에 박지 않고 시크릿으로 둬서 포크한 저장소의 빌드가 같은 프로젝트로 이벤트를 보내지 않게 함.

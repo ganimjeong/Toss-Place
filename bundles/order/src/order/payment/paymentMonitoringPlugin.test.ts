@@ -1,5 +1,5 @@
 import type { Monitor } from '@toss-place/monitoring';
-import { createPaymentClient, createMemoryJournal } from '@toss-place/payment-sdk';
+import { createPaymentClient, createMemoryJournal } from '@ganimjeong/payment-sdk';
 import type { CardPaymentFailureReason } from '@toss-place/pos-bridge';
 import { describe, expect, it, vi } from 'vitest';
 

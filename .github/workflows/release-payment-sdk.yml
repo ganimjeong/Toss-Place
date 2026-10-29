@@ -31,9 +31,15 @@ jobs:
           version=$(node -p "require('./packages/payment-sdk/package.json').version")
           test "payment-sdk@$version" = "$GITHUB_REF_NAME"
 
-      - run: yarn workspace @toss-place/payment-sdk typecheck
-      - run: yarn workspace @toss-place/payment-sdk test
-      - run: yarn workspace @toss-place/payment-sdk check:package
+      # 토큰이 없으면 테스트까지 다 돈 뒤 npm publish에서야 실패하므로 먼저 막음
+      - name: Check npm token
+        run: test -n "$NODE_AUTH_TOKEN" || { echo "NPM_TOKEN 시크릿이 없습니다. CONTRIBUTING.md의 배포 설정을 확인해 주세요."; exit 1; }
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - run: yarn workspace @ganimjeong/payment-sdk typecheck
+      - run: yarn workspace @ganimjeong/payment-sdk test
+      - run: yarn workspace @ganimjeong/payment-sdk check:package
 
       # yarn pack이 publishConfig.exports를 반영한 tarball을 만들고, npm이 provenance를 붙여 올림
       - run: npm publish package.tgz --provenance --access public

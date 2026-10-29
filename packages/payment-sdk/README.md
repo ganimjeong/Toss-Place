@@ -1,7 +1,15 @@
-# @toss-place/payment-sdk
+# @ganimjeong/payment-sdk
 
 POS 결제에서 돈이 두 번 나가거나, 나갔는데 모르는 상황을 막는 SDK.
 단말기, PG 같은 결제 수단은 모르고 `PaymentTransport` 모양만 알아서 Electron IPC, HTTP API 어디에나 붙일 수 있음.
+
+## 설치
+
+```sh
+npm install @ganimjeong/payment-sdk
+```
+
+ESM, CJS 모두 지원하고 타입 선언이 들어 있음. 런타임 의존성은 없음.
 
 ## 막는 것
 
@@ -16,7 +24,7 @@ POS 결제에서 돈이 두 번 나가거나, 나갔는데 모르는 상황을 �
 ## 사용법
 
 ```ts
-import { createPaymentClient, createStorageJournal } from '@toss-place/payment-sdk';
+import { createPaymentClient, createStorageJournal } from '@ganimjeong/payment-sdk';
 
 const client = createPaymentClient({
   transport: {
