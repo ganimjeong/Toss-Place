@@ -49,4 +49,4 @@
 - `0.1.0`: 로컬 배포, `npm view`로 레지스트리 반영 확인
 - Trusted Publisher: 저장 뒤 설정 화면에서 `ganimjeong/Toss-Place`, `release-payment-sdk.yml`, 권한 `npm publish`, `npm stage publish` 확인
 - Publishing access: 저장 뒤 화면을 다시 열어 "disallow bypass 2fa tokens"가 선택된 상태 확인
-- `0.1.1`: 이 PR 머지 뒤 `payment-sdk@0.1.1` 태그로 CI 배포
+- `0.1.1`: `payment-sdk@0.1.1` 태그로 CI 배포 성공. 로그에 `Signed provenance statement`가 찍히고, 레지스트리의 `dist.attestations.provenance`가 SLSA v1로 채워짐. 배포 직후 설정 화면의 연결 상태가 "Pending validation"에서 "Valid"로 바뀜

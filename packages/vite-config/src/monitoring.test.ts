@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { readMonitoringEnv } from './monitoring';
+import { readMonitoringEnv, toReleaseName } from './monitoring';
 
 const packageDir = import.meta.dirname + '/..';
 
@@ -23,7 +23,7 @@ describe('readMonitoringEnv', () => {
   });
 
   it('릴리스 이름은 패키지 이름과 버전으로 정함', () => {
-    expect(readMonitoringEnv({}, packageDir).release).toBe('@toss-place/vite-config@0.0.0');
+    expect(readMonitoringEnv({}, packageDir).release).toBe('toss-place-vite-config@0.0.0');
   });
 
   it('CI에서 등록하지 않은 시크릿처럼 빈 문자열이면 없는 것으로 봄', () => {
@@ -39,5 +39,15 @@ describe('readMonitoringEnv', () => {
     const env = readMonitoringEnv({ SENTRY_AUTH_TOKEN: 'token', SENTRY_ORG: 'org' }, packageDir);
 
     expect(env.sourceMapUpload).toBeNull();
+  });
+});
+
+describe('toReleaseName', () => {
+  it('Sentry가 거절하는 `/`를 릴리스 이름에 넣지 않음', () => {
+    expect(toReleaseName('@toss-place/order', '0.1.0')).toBe('toss-place-order@0.1.0');
+  });
+
+  it('scope가 없는 이름은 그대로 씀', () => {
+    expect(toReleaseName('mini-pos', '0.1.0')).toBe('mini-pos@0.1.0');
   });
 });
