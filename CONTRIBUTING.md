@@ -86,10 +86,10 @@ refactor(utils): 금액 나누기 로직을 splitWon으로 분리
 
 ## 배포
 
-| 대상                                 | 방법                          | 필요한 설정                              |
-| ------------------------------------ | ----------------------------- | ---------------------------------------- |
-| 결제 SDK (`@ganimjeong/payment-sdk`) | `payment-sdk@x.y.z` 태그 push | 시크릿 `NPM_TOKEN`                       |
-| POS 앱 (macOS dmg, Windows exe)      | `pos@x.y.z` 태그 push         | 없음. Sentry를 켜려면 아래 시크릿과 변수 |
+| 대상                                 | 방법                          | 필요한 설정                                   |
+| ------------------------------------ | ----------------------------- | --------------------------------------------- |
+| 결제 SDK (`@ganimjeong/payment-sdk`) | `payment-sdk@x.y.z` 태그 push | npmjs.com의 Trusted Publisher 등록. 토큰 없음 |
+| POS 앱 (macOS dmg, Windows exe)      | `pos@x.y.z` 태그 push         | 없음. Sentry를 켜려면 아래 시크릿과 변수      |
 
 태그의 버전은 해당 `package.json`의 `version`과 같아야 함. 다르면 워크플로가 패키징 전에 멈춤.
 
@@ -97,9 +97,20 @@ refactor(utils): 금액 나누기 로직을 splitWon으로 분리
 
 npm
 
-1. npmjs.com에서 Access Tokens → Generate New Token → Granular Access Token
-2. Packages and scopes는 Read and write, 대상은 `@ganimjeong` scope로 제한함
-3. 터미널에서 `gh secret set NPM_TOKEN`을 실행하고 토큰을 붙여 넣음. 토큰을 파일이나 채팅에 남기지 않음
+저장소에 npm 토큰을 두지 않고 Trusted Publishing(OIDC)으로 배포함. 2FA를 우회하는 토큰은 2027년 1월부터 직접 배포를 못 하게 바뀌어서 처음부터 이 방식으로 둠.
+
+1. 첫 버전은 npm에 패키지가 있어야 신뢰 설정을 할 수 있으므로, 로그인한 사람이 로컬에서 한 번 직접 올림
+   ```sh
+   npm login
+   yarn workspace @ganimjeong/payment-sdk pack --out package.tgz
+   npm publish packages/payment-sdk/package.tgz --access public
+   ```
+2. npmjs.com의 패키지 Settings → Trusted Publisher → GitHub Actions에 아래 값을 넣음
+   - Organization or user: `ganimjeong`
+   - Repository: `Toss-Place`
+   - Workflow filename: `release-payment-sdk.yml`
+3. 같은 화면에서 Publishing access를 "Require two-factor authentication and disallow tokens"로 바꿔 토큰 배포를 막음
+4. 이후 버전은 `payment-sdk@x.y.z` 태그만 올리면 됨
 
 Sentry
 
