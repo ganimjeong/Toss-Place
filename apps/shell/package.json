@@ -12,6 +12,7 @@
     "start": "electron .",
     "package": "electron-builder --publish never",
     "smoke": "electron . --smoke-test",
+    "measure": "node scripts/measure.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
