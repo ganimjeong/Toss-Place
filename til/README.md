@@ -16,6 +16,7 @@
 | 2026-10-27 | [Sentry 연결](2026-10-27-sentry.md)                             |
 | 2026-10-27 | [PR #6, #7, #8 회고](2026-10-27-pr-retrospective.md)            |
 | 2026-10-29 | [배포 설정](2026-10-29-release-setup.md)                        |
+| 2026-10-30 | [첫 배포와 Trusted Publisher 등록](2026-10-30-first-publish.md) |
 
 참고: [기술 스택 선택 이유](tech-stack.md)
 

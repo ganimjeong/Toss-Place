@@ -99,18 +99,23 @@ npm
 
 저장소에 npm 토큰을 두지 않고 Trusted Publishing(OIDC)으로 배포함. 2FA를 우회하는 토큰은 2027년 1월부터 직접 배포를 못 하게 바뀌어서 처음부터 이 방식으로 둠.
 
-1. 첫 버전은 npm에 패키지가 있어야 신뢰 설정을 할 수 있으므로, 로그인한 사람이 로컬에서 한 번 직접 올림
+1. npm 계정에 2FA를 켬. 꺼져 있으면 직접 배포가 `E403`으로 막힘
+2. 첫 버전은 npm에 패키지가 있어야 신뢰 설정을 할 수 있으므로, 로그인한 사람이 로컬에서 한 번 직접 올림. 대화형 터미널에서 npm 11 이상으로 실행함
    ```sh
    npm login
    yarn workspace @ajinjeong/payment-sdk pack --out package.tgz
-   npm publish packages/payment-sdk/package.tgz --access public
+   npm publish packages/payment-sdk/package.tgz --access public --auth-type=web
    ```
-2. npmjs.com의 패키지 Settings → Trusted Publisher → GitHub Actions에 아래 값을 넣음
+   - 2FA를 패스키(보안키)로 켰으면 6자리 코드가 없음. npm 10은 코드 입력만 받으므로 npm 11의 `--auth-type=web`으로 브라우저 인증을 함
+   - 인증을 기다려야 해서 입력을 받을 수 없는 환경(에디터 안 실행 창 등)에서는 인증 주소만 출력하고 끝남
+3. npmjs.com의 패키지 Settings → Trusted Publisher → GitHub Actions에 아래 값을 넣음. 저장한 뒤에는 고칠 수 없고 지우고 다시 만들어야 함
    - Organization or user: `ganimjeong` (GitHub 아이디. npm 아이디 `ajinjeong`과 다름)
    - Repository: `Toss-Place`
    - Workflow filename: `release-payment-sdk.yml`
-3. 같은 화면에서 Publishing access를 "Require two-factor authentication and disallow tokens"로 바꿔 토큰 배포를 막음
-4. 이후 버전은 `payment-sdk@x.y.z` 태그만 올리면 됨
+   - Allowed actions: `Allow npm publish`를 켬. 끄면 CI는 `npm stage publish`만 할 수 있고 사람이 웹에서 승인해야 공개됨. 이 워크플로는 `npm publish`로 바로 올림
+4. 같은 화면에서 Publishing access를 "Require two-factor authentication and disallow bypass 2fa tokens"로 바꿔 토큰 배포를 막음
+5. 등록 직후 연결은 "Pending validation" 상태이고, 정해진 기한(약 이틀) 안에 이 워크플로로 한 번 배포해야 검증됨. 등록하고 바로 다음 버전 태그를 올림
+6. 이후 버전은 `payment-sdk@x.y.z` 태그만 올리면 됨
 
 Sentry
 
